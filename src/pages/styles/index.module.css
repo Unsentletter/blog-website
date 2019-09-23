@@ -1,0 +1,21 @@
+.body {
+  height: 100vh;
+  background-color: #f5f5f5;
+  width: 100vw;
+  text-align: center;
+  margin-top: -80px;
+}
+.text-wrapper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+}
+.main-header {
+  text-weight: 500;
+  font-size: 50px;
+}
+.sub-header {
+  font-size: 30px;
+}
