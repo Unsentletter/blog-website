@@ -1,22 +1,39 @@
-/**
- * Implement Gatsby's Node APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/node-apis/
- */
+const path = require('path');
+const { createFilePath } = require(`gatsby-source-filesystem`);
+exports.onCreateNode = ({ node, getNode, actions }) => {
+  const { createNodeField } = actions;
+  if (node.internal.type === `MarkdownRemark`) {
+    const slug = createFilePath({ node, getNode, basePath: `pages` });
+    createNodeField({
+      node,
+      name: `slug`,
+      value: slug,
+    });
+  }
+};
 
-// You can delete this file if you're not using it
-// result.data.allMarkdownRemark.edges.forEach(edge => {
-//   if (edge.node.frontmatter.posttype === "aquariumBlog") {
-//     createPage({
-//       path: edge.node.frontmatter.path,
-//       component: projectTemplate,
-//       context: {},
-//     })
-//   } else {
-//     createPage({
-//       path: edge.node.frontmatter.path,
-//       component: postTemplate,
-//       context: {},
-//     })
-//   }
-// })
+exports.createPages = async ({ graphql, actions }) => {
+  const { createPage } = actions;
+  const result = await graphql(`
+    query {
+      allMarkdownRemark {
+        edges {
+          node {
+            fields {
+              slug
+            }
+          }
+        }
+      }
+    }
+  `);
+  result.data.allMarkdownRemark.edges.forEach(({ node }) => {
+    createPage({
+      path: node.fields.slug,
+      component: path.resolve(`./src/templates/aquarium-blog-posts.js`),
+      context: {
+        slug: node.fields.slug,
+      },
+    });
+  });
+};

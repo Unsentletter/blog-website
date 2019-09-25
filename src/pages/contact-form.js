@@ -5,7 +5,7 @@ class ContactForm extends React.Component {
   render() {
     return (
       <div>
-        <style jsx>
+        <style>
           {`
             .body {
               height: 100vh;

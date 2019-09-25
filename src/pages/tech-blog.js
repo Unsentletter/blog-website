@@ -6,15 +6,19 @@ import styles from "./styles/tech-blog.module.css"
 
 class TechBlog extends React.Component {
   render() {
-    console.log(
-      this.props.data.allMarkdownRemark.edges[0].node.frontmatter.title
-    )
+    console.log(this.props.data.allMarkdownRemark.edges[0].node)
     return (
       <div>
         <Layout>
           <div className={styles.body}>
-            {this.props.data.allMarkdownRemark.edges[0].node.frontmatter.title}
-            {this.props.data.allMarkdownRemark.edges[0].node.html}
+            {this.props.data.allMarkdownRemark.edges.map(({ node }) => (
+              <div>
+                <div>
+                  {node.frontmatter.title} - {node.frontmatter.date}
+                </div>
+                <div>{node.excerpt}</div>
+              </div>
+            ))}
           </div>
         </Layout>
       </div>
@@ -26,14 +30,16 @@ export default TechBlog
 
 export const query = graphql`
   query {
-    allMarkdownRemark {
+    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
       edges {
         node {
           id
           html
           frontmatter {
             title
+            date(formatString: "DD MMMM, YYYY")
           }
+          excerpt
         }
       }
     }
